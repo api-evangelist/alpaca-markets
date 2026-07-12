@@ -1,0 +1,150 @@
+aid: alpaca-markets
+url: https://raw.githubusercontent.com/api-evangelist/alpaca-markets/refs/heads/main/apis.yml
+name: Alpaca
+kind: company
+description: Alpaca is a developer-first, commission-free brokerage that exposes
+  stock, ETF, options, and crypto trading and market data entirely through APIs.
+  The Trading API places and manages orders against a free paper-trading sandbox
+  (paper-api.alpaca.markets) or a live account (api.alpaca.markets/v2); the Market
+  Data API serves historical and real-time stocks, crypto, options, news, and
+  corporate actions over REST plus WebSocket streams (data.alpaca.markets and
+  stream.data.alpaca.markets); and the Broker API lets businesses open and fund
+  end-user brokerage accounts. Authentication uses APCA-API-KEY-ID and
+  APCA-API-SECRET-KEY headers, with OAuth2 available for third-party apps.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Market Data
+- Trading
+- Brokerage
+- Stocks
+- Crypto
+- Options
+- FX Trading
+- Financial Data
+- Streaming
+- WebSocket
+created: '2026-07-11'
+modified: '2026-07-11'
+specificationVersion: '0.19'
+apis:
+- aid: alpaca-markets:alpaca-markets-trading-api
+  name: Alpaca Trading API
+  tags:
+  - Trading
+  - Orders
+  - Stocks
+  - Crypto
+  - Brokerage
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.alpaca.markets/reference/getaccount-1
+  baseURL: https://api.alpaca.markets/v2
+  properties:
+  - url: https://docs.alpaca.markets/docs/trading-api
+    type: Documentation
+  - url: https://docs.alpaca.markets/reference/getaccount-1
+    type: APIReference
+  - url: openapi/alpaca-markets-openapi.yml
+    type: OpenAPI
+  - url: collections/alpaca-markets.postman_collection.json
+    type: PostmanCollection
+  - url: collections/alpaca-markets.opencollection.json
+    type: OpenCollection
+  description: Commission-free trading of US stocks, ETFs, options, and crypto.
+    Submit, replace, and cancel orders; read account balances, positions, portfolio
+    history, and account activities; browse tradable assets; and manage watchlists,
+    the market calendar, and clock. Runs identically against the free paper-trading
+    sandbox at paper-api.alpaca.markets and a funded live account.
+- aid: alpaca-markets:alpaca-markets-market-data-api
+  name: Alpaca Market Data API
+  tags:
+  - Market Data
+  - Financial Data
+  - Stocks
+  - Crypto
+  - Options
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.alpaca.markets/reference/stockbars
+  baseURL: https://data.alpaca.markets
+  properties:
+  - url: https://docs.alpaca.markets/docs/about-market-data-api
+    type: Documentation
+  - url: https://docs.alpaca.markets/reference/stockbars
+    type: APIReference
+  - url: openapi/alpaca-markets-openapi.yml
+    type: OpenAPI
+  - url: collections/alpaca-markets.postman_collection.json
+    type: PostmanCollection
+  - url: collections/alpaca-markets.opencollection.json
+    type: OpenCollection
+  description: Historical and real-time pricing data for US stocks (SIP and IEX
+    feeds), crypto, and options - bars, trades, quotes, snapshots, auctions,
+    orderbooks, latest values, plus a news feed, corporate actions, and a
+    most-actives / movers screener. REST over data.alpaca.markets with v2 stocks,
+    v1beta3 crypto, and v1beta1 options / news / screener namespaces.
+- aid: alpaca-markets:alpaca-markets-streaming-api
+  name: Alpaca Market Data Streaming API
+  tags:
+  - Streaming
+  - WebSocket
+  - Market Data
+  - Real Time
+  - Trading
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.alpaca.markets/docs/streaming-market-data
+  baseURL: wss://stream.data.alpaca.markets
+  properties:
+  - url: https://docs.alpaca.markets/docs/streaming-market-data
+    type: Documentation
+  - url: https://docs.alpaca.markets/docs/real-time-crypto-pricing-data
+    type: APIReference
+  - url: asyncapi/alpaca-markets-asyncapi.yml
+    type: AsyncAPI
+  description: Real-time market data over WebSocket. Stocks stream at
+    wss://stream.data.alpaca.markets/v2/{feed} (iex, sip, delayed_sip, test) and
+    crypto at wss://stream.data.alpaca.markets/v1beta3/crypto/us. Authenticate with
+    an auth message, then subscribe to trades, quotes, bars, dailyBars,
+    updatedBars, statuses, lulds, and (crypto) orderbooks per symbol or with a
+    wildcard. This is a documented public wss:// API.
+- aid: alpaca-markets:alpaca-markets-broker-api
+  name: Alpaca Broker API
+  tags:
+  - Brokerage
+  - Broker
+  - Accounts
+  - Embedded Finance
+  - Trading
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.alpaca.markets/docs/about-broker-api
+  baseURL: https://broker-api.alpaca.markets/v1
+  properties:
+  - url: https://docs.alpaca.markets/docs/about-broker-api
+    type: Documentation
+  - url: https://docs.alpaca.markets/reference/createaccount
+    type: APIReference
+  - url: openapi/alpaca-markets-openapi.yml
+    type: OpenAPI
+  description: Build brokerage and trading products for end users. Open and manage
+    customer brokerage accounts (KYC/onboarding), move money via ACH and wire
+    transfers, journal cash and securities between accounts, place trades on behalf
+    of customers, and access documents and events. Sandbox at
+    broker-api.sandbox.alpaca.markets uses HTTP Basic auth.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/alpacahq
+- type: Website
+  url: https://alpaca.markets/
+- type: Documentation
+  url: https://docs.alpaca.markets
+- type: GitHubOrganization
+  url: https://github.com/alpacahq
+- type: Plans
+  url: plans/alpaca-markets-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/alpaca-markets-rate-limits.yml
+- type: FinOps
+  url: finops/alpaca-markets-finops.yml
+- url: https://alpaca.markets/blog
+  type: Blog
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,165 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Alpaca
+providerId: alpaca-markets
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Market Data
+- Trading
+- Brokerage
+- Stocks
+- Crypto
+- Plans
+description: >-
+  Alpaca separates trading from market data in its pricing. Trading itself is
+  commission-free for US stocks, ETFs, and options, and a full paper-trading
+  sandbox is free forever. Market data is where the paid tiers live: a free
+  Basic plan (real-time IEX equities over WebSocket, 15-minute delayed SIP over
+  REST, indicative options, crypto, 200 requests/minute) and Algo Trader Plus
+  at $99/month (full real-time SIP across all US exchanges, real-time OPRA
+  options, unlimited WebSocket symbols, up to 10,000 requests/minute). Business
+  and enterprise market-data agreements are negotiated. The Broker API is a
+  B2B product with commercial pricing agreed with Alpaca. Numbers reflect
+  Alpaca's published pricing at review time and are not otherwise reconciled.
+notes: >-
+  Options and crypto trading may carry per-contract or spread-based fees; verify
+  current fee schedules and market-data tiers on alpaca.markets/data and the
+  Alpaca pricing/disclosures pages during reconciliation.
+sources:
+- https://alpaca.markets/data
+- https://docs.alpaca.markets/docs/about-market-data-api
+- https://docs.alpaca.markets/docs/market-data-faq
+plans:
+- id: alpaca-paper-trading
+  name: Paper Trading (Sandbox)
+  type: free
+  description: >-
+    A free, funded-with-virtual-cash paper account at paper-api.alpaca.markets
+    that mirrors the live Trading API exactly. No cost, no live money; ideal for
+    building and testing strategies.
+  entries:
+  - label: Paper Trading
+    name: paper_trading
+    type: usage
+    metric: orders
+    limit: -1
+    timeFrame: month
+    geo: us
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Full Trading API
+  - name: Simulated Fills
+  - name: Real-Time Account WebSocket
+- id: alpaca-commission-free-trading
+  name: Commission-Free Trading (Live)
+  type: free
+  description: >-
+    Commission-free trading of US stocks and ETFs on a funded live account.
+    Fractional shares supported. Options and crypto trading may carry
+    per-contract or spread fees per Alpaca's fee schedule.
+  entries:
+  - label: Stock and ETF Commissions
+    name: equity_commission
+    type: usage
+    metric: trades
+    limit: -1
+    timeFrame: month
+    geo: us
+    unit: 1
+    price: $0 commission (regulatory/exchange fees may apply)
+    userMultiplied: false
+  elements:
+  - name: US Stocks and ETFs
+  - name: Fractional Shares
+  - name: Options Trading
+  - name: Crypto Trading
+- id: alpaca-market-data-basic
+  name: Market Data - Basic
+  type: free
+  description: >-
+    Free market data tier, the default for all accounts. Real-time IEX equities
+    over WebSocket, 15-minute delayed full-market data over REST, indicative
+    options quotes, and crypto. Capped at 200 API requests/minute and limited
+    WebSocket symbol subscriptions.
+  entries:
+  - label: API Requests
+    name: basic_requests
+    type: usage
+    metric: requests
+    limit: 200
+    timeFrame: minute
+    geo: global
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Real-Time IEX Equities (WebSocket)
+  - name: 15-Minute Delayed SIP (REST)
+  - name: Indicative Options
+  - name: Crypto Data
+  - name: 7+ Years History
+- id: alpaca-market-data-algo-trader-plus
+  name: Market Data - Algo Trader Plus
+  type: paid
+  description: >-
+    Paid market-data tier for algo traders and quants. Full real-time SIP data
+    across all US exchanges, real-time OPRA options data, unlimited WebSocket
+    symbol subscriptions, and up to 10,000 API requests/minute.
+  entries:
+  - label: Monthly Subscription
+    name: algo_trader_plus
+    type: flat
+    metric: subscription
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $99 per month
+    userMultiplied: false
+  - label: API Requests
+    name: atp_requests
+    type: usage
+    metric: requests
+    limit: 10000
+    timeFrame: minute
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: Full Real-Time SIP (All US Exchanges)
+  - name: Real-Time OPRA Options
+  - name: Unlimited WebSocket Symbols
+  - name: 7+ Years History
+- id: alpaca-broker-api
+  name: Broker API (Business)
+  type: enterprise
+  description: >-
+    B2B product for businesses building brokerage and trading services for their
+    own end users. Commercial terms (per-account, revenue-share, or platform
+    fees) are negotiated with Alpaca. A free sandbox at
+    broker-api.sandbox.alpaca.markets is available for development.
+  entries:
+  - label: Broker Agreement
+    name: broker_agreement
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: End-User Account Onboarding
+  - name: Funding and Journaling
+  - name: Trading on Behalf of Users
+  - name: Sandbox Environment
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

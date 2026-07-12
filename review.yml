@@ -1,0 +1,156 @@
+aid: alpaca-markets
+name: Alpaca
+review:
+  question: Does Alpaca expose a documented public WebSocket API?
+  answer: true
+  date: '2026-07-11'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: true
+  asyncapiScopeNote: |
+    Alpaca publishes a genuine public WebSocket (wss://) API for real-time
+    market data, so an AsyncAPI 2.6 document was authored at
+    asyncapi/alpaca-markets-asyncapi.yml modeling the stocks stream
+    (wss://stream.data.alpaca.markets/v2/{feed}) and the crypto stream
+    (wss://stream.data.alpaca.markets/v1beta3/crypto/us). The document covers
+    the client-sent control messages (auth, subscribe, unsubscribe) and the
+    server-sent data messages (success/error/subscription control frames plus
+    trades, quotes, bars, dailyBars, updatedBars, statuses, lulds, corrections,
+    cancelErrors, and crypto orderbooks). Streaming account/order updates
+    (Trading API trade_updates over wss://.../stream and the Broker API SSE
+    events feed) are additional server-push surfaces noted but not fully
+    modeled here.
+findings:
+  summary: |
+    Alpaca DOES publish a documented public WebSocket API. The Market Data API
+    exposes real-time streaming over WebSocket at
+    wss://stream.data.alpaca.markets. US equities stream from
+    wss://stream.data.alpaca.markets/v2/{feed}, where {feed} is one of iex,
+    sip, delayed_sip, or test (a 24/7 fake-symbol feed for development).
+    Crypto streams from wss://stream.data.alpaca.markets/v1beta3/crypto/us, and
+    options from wss://stream.data.alpaca.markets/v1beta1/{feed}. A sandbox
+    mirror is available at wss://stream.data.sandbox.alpaca.markets. Clients
+    connect, send an auth control message
+    ({"action":"auth","key":"...","secret":"..."}), then a subscribe message
+    selecting channels (trades, quotes, bars, dailyBars, updatedBars, statuses,
+    lulds, and crypto orderbooks) per symbol or with a "*" wildcard. Messages
+    are exchanged as JSON (msgpack also supported). Separately, the Trading API
+    exposes a real-time account/order WebSocket
+    (wss://{paper-}api.alpaca.markets/stream, listen -> trade_updates), and the
+    Broker API exposes server-push events via SSE. This entry therefore answers
+    TRUE and ships an AsyncAPI 2.6 document for the market-data stream.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.alpaca.markets/v2
+      documented: true
+      note: Trading API. Paper sandbox at https://paper-api.alpaca.markets/v2.
+    - protocol: REST
+      scheme: https
+      baseURL: https://data.alpaca.markets
+      documented: true
+      note: Market Data API - v2 stocks, v1beta3 crypto, v1beta1 options/news/screener.
+    - protocol: REST
+      scheme: https
+      baseURL: https://broker-api.alpaca.markets/v1
+      documented: true
+      note: Broker API. Sandbox at https://broker-api.sandbox.alpaca.markets/v1 (HTTP Basic auth).
+    - protocol: WebSocket
+      scheme: wss
+      baseURL: wss://stream.data.alpaca.markets
+      documented: true
+      note: >-
+        Real-time market data. Stocks wss://stream.data.alpaca.markets/v2/{feed}
+        (iex, sip, delayed_sip, test); crypto
+        wss://stream.data.alpaca.markets/v1beta3/crypto/us; options
+        wss://stream.data.alpaca.markets/v1beta1/{feed}. Sandbox mirror at
+        wss://stream.data.sandbox.alpaca.markets.
+    - protocol: WebSocket
+      scheme: wss
+      baseURL: wss://api.alpaca.markets/stream
+      documented: true
+      note: >-
+        Trading API real-time account/order updates. Authenticate, then listen
+        to trade_updates. Paper at wss://paper-api.alpaca.markets/stream.
+    - protocol: SSE
+      scheme: https
+      documented: true
+      note: Broker API events (accounts, trades, transfers, journals, nta) delivered as Server-Sent Events.
+  endpointsConfirmedRest:
+    - GET    https://api.alpaca.markets/v2/account
+    - GET    https://api.alpaca.markets/v2/orders
+    - POST   https://api.alpaca.markets/v2/orders
+    - GET    https://api.alpaca.markets/v2/orders/{order_id}
+    - PATCH  https://api.alpaca.markets/v2/orders/{order_id}
+    - DELETE https://api.alpaca.markets/v2/orders/{order_id}
+    - DELETE https://api.alpaca.markets/v2/orders
+    - GET    https://api.alpaca.markets/v2/positions
+    - GET    https://api.alpaca.markets/v2/positions/{symbol_or_asset_id}
+    - DELETE https://api.alpaca.markets/v2/positions
+    - DELETE https://api.alpaca.markets/v2/positions/{symbol_or_asset_id}
+    - GET    https://api.alpaca.markets/v2/account/portfolio/history
+    - GET    https://api.alpaca.markets/v2/account/activities
+    - GET    https://api.alpaca.markets/v2/assets
+    - GET    https://api.alpaca.markets/v2/assets/{symbol_or_asset_id}
+    - GET    https://api.alpaca.markets/v2/watchlists
+    - POST   https://api.alpaca.markets/v2/watchlists
+    - GET    https://api.alpaca.markets/v2/calendar
+    - GET    https://api.alpaca.markets/v2/clock
+    - GET    https://data.alpaca.markets/v2/stocks/bars
+    - GET    https://data.alpaca.markets/v2/stocks/{symbol}/bars
+    - GET    https://data.alpaca.markets/v2/stocks/trades
+    - GET    https://data.alpaca.markets/v2/stocks/quotes
+    - GET    https://data.alpaca.markets/v2/stocks/snapshots
+    - GET    https://data.alpaca.markets/v2/stocks/{symbol}/snapshot
+    - GET    https://data.alpaca.markets/v2/stocks/auctions
+    - GET    https://data.alpaca.markets/v1beta3/crypto/{loc}/bars
+    - GET    https://data.alpaca.markets/v1beta3/crypto/{loc}/trades
+    - GET    https://data.alpaca.markets/v1beta3/crypto/{loc}/quotes
+    - GET    https://data.alpaca.markets/v1beta3/crypto/{loc}/latest/orderbooks
+    - GET    https://data.alpaca.markets/v1beta1/options/bars
+    - GET    https://data.alpaca.markets/v1beta1/options/snapshots/{underlying_symbol}
+    - GET    https://data.alpaca.markets/v1beta1/news
+    - GET    https://data.alpaca.markets/v1beta1/screener/stocks/most-actives
+    - GET    https://data.alpaca.markets/v1beta1/corporate-actions
+    - POST   https://broker-api.alpaca.markets/v1/accounts
+    - GET    https://broker-api.alpaca.markets/v1/accounts/{account_id}
+    - POST   https://broker-api.alpaca.markets/v1/trading/accounts/{account_id}/orders
+    - POST   https://broker-api.alpaca.markets/v1/accounts/{account_id}/transfers
+    - POST   https://broker-api.alpaca.markets/v1/journals
+  endpointsConfirmedWebSocket:
+    - wss://stream.data.alpaca.markets/v2/iex
+    - wss://stream.data.alpaca.markets/v2/sip
+    - wss://stream.data.alpaca.markets/v2/delayed_sip
+    - wss://stream.data.alpaca.markets/v2/test
+    - wss://stream.data.alpaca.markets/v1beta3/crypto/us
+    - wss://stream.data.alpaca.markets/v1beta1/{options_feed}
+    - wss://api.alpaca.markets/stream
+    - wss://paper-api.alpaca.markets/stream
+sources:
+  - url: https://docs.alpaca.markets/docs/getting-started
+    type: Documentation
+    note: Lists Trading, Market Data, Broker, Connect, and FIX products; base domains and APCA-API-KEY-ID / APCA-API-SECRET-KEY auth.
+  - url: https://docs.alpaca.markets/docs/streaming-market-data
+    type: Documentation
+    note: WebSocket stream schema wss://stream.data.alpaca.markets/{version}/{feed}; auth + subscribe message formats; channels trades/quotes/bars/dailyBars/updatedBars/statuses/lulds/corrections/cancelErrors.
+  - url: https://docs.alpaca.markets/docs/real-time-crypto-pricing-data
+    type: Documentation
+    note: Crypto WebSocket wss://stream.data.alpaca.markets/v1beta3/crypto/us with orderbooks channel; v1beta3 distributes Alpaca + Kraken data.
+  - url: https://docs.alpaca.markets/reference/stockbars
+    type: APIReference
+    note: Market Data REST base data.alpaca.markets; stocks bars/trades/quotes/snapshots endpoints.
+  - url: https://docs.alpaca.markets/reference/getaccount-1
+    type: APIReference
+    note: Trading API base https://api.alpaca.markets/v2, paper https://paper-api.alpaca.markets/v2; GET /v2/account.
+  - url: https://alpaca.markets/data
+    type: Pricing
+    note: Free plan (IEX real-time WS, 200 rpm, 15-min delayed REST) vs Algo Trader Plus $99/mo (full SIP, OPRA options, up to 10000 rpm).
+actions:
+  asyncapiPath: asyncapi/alpaca-markets-asyncapi.yml
+  apisYmlUpdated: true
+  reason: |
+    Alpaca publishes a real, documented public WebSocket API for real-time
+    market data (stocks, crypto, and options streams under
+    wss://stream.data.alpaca.markets), plus a Trading API account/order
+    WebSocket. An AsyncAPI 2.6 document was authored for the market-data
+    stream, and a dedicated Streaming API entry was added to apis.yml alongside
+    the Trading, Market Data, and Broker REST APIs.

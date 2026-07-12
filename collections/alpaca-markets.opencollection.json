@@ -1,0 +1,214 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "header": [
+        { "key": "APCA-API-KEY-ID", "value": "{{apcaKeyId}}" },
+        { "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }
+      ]
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Trading - Account", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get account.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/account" },
+          "docs": "Returns the authenticated trading account's balances and status. Use https://paper-api.alpaca.markets/v2/account for paper trading."
+        },
+        {
+          "info": { "name": "Get account activities.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/account/activities" },
+          "docs": "Returns account activity entries (fills, dividends, transfers, fees)."
+        },
+        {
+          "info": { "name": "Get portfolio history.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/account/portfolio/history?period=1M&timeframe=1D" },
+          "docs": "Returns equity and profit/loss time series over a period."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Trading - Orders", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List orders.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/orders?status=open&limit=50" },
+          "docs": "Lists orders filterable by status, symbols, and time."
+        },
+        {
+          "info": { "name": "Create an order.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.alpaca.markets/v2/orders",
+            "body": { "type": "json", "data": "{\n  \"symbol\": \"AAPL\",\n  \"qty\": \"1\",\n  \"side\": \"buy\",\n  \"type\": \"market\",\n  \"time_in_force\": \"day\"\n}" }
+          },
+          "docs": "Submits a new order for stocks, options, or crypto."
+        },
+        {
+          "info": { "name": "Get an order.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/orders/:order_id",
+            "params": [ { "name": "order_id", "value": "", "type": "path", "description": "The order UUID." } ]
+          },
+          "docs": "Retrieves a single order by ID."
+        },
+        {
+          "info": { "name": "Cancel an order.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.alpaca.markets/v2/orders/:order_id",
+            "params": [ { "name": "order_id", "value": "", "type": "path", "description": "The order UUID." } ]
+          },
+          "docs": "Attempts to cancel a single open order by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Trading - Positions", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List open positions.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/positions" },
+          "docs": "Retrieves all open positions in the account."
+        },
+        {
+          "info": { "name": "Close a position.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.alpaca.markets/v2/positions/:symbol_or_asset_id",
+            "params": [ { "name": "symbol_or_asset_id", "value": "", "type": "path", "description": "Symbol or asset UUID." } ]
+          },
+          "docs": "Liquidates the open position for a symbol or asset."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Trading - Assets & Market", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List assets.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/assets?status=active&asset_class=us_equity" },
+          "docs": "Retrieves the catalog of tradable and non-tradable assets."
+        },
+        {
+          "info": { "name": "Get market clock.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/clock" },
+          "docs": "Returns whether the market is open and next open/close times."
+        },
+        {
+          "info": { "name": "Get market calendar.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.alpaca.markets/v2/calendar" },
+          "docs": "Returns market open/close dates and session times."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Market Data - Stocks", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get historical stock bars.", "type": "http" },
+          "http": { "method": "GET", "url": "https://data.alpaca.markets/v2/stocks/bars?symbols=AAPL,TSLA&timeframe=1Day&feed=iex" },
+          "docs": "Returns OHLCV bars for one or more stock symbols. Use feed=sip on Algo Trader Plus."
+        },
+        {
+          "info": { "name": "Get stock snapshot.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.alpaca.markets/v2/stocks/:symbol/snapshot",
+            "params": [ { "name": "symbol", "value": "AAPL", "type": "path", "description": "The stock symbol." } ]
+          },
+          "docs": "Returns latest trade, quote, minute bar, daily bar, and previous daily bar."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Market Data - Crypto", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get historical crypto bars.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.alpaca.markets/v1beta3/crypto/:loc/bars?symbols=BTC/USD,ETH/USD&timeframe=1Hour",
+            "params": [ { "name": "loc", "value": "us", "type": "path", "description": "Crypto market location, for example us." } ]
+          },
+          "docs": "Returns OHLCV bars for crypto pairs (v1beta3, Alpaca + Kraken)."
+        },
+        {
+          "info": { "name": "Get latest crypto orderbooks.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.alpaca.markets/v1beta3/crypto/:loc/latest/orderbooks?symbols=BTC/USD",
+            "params": [ { "name": "loc", "value": "us", "type": "path", "description": "Crypto market location, for example us." } ]
+          },
+          "docs": "Returns the latest Level 2 orderbook for one or more crypto pairs."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Market Data - Options, News, Screener", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get option chain snapshots.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.alpaca.markets/v1beta1/options/snapshots/:underlying_symbol?feed=indicative",
+            "params": [ { "name": "underlying_symbol", "value": "AAPL", "type": "path", "description": "The underlying equity symbol." } ]
+          },
+          "docs": "Returns snapshots for the option contracts of an underlying symbol. Use feed=opra on Algo Trader Plus."
+        },
+        {
+          "info": { "name": "Get market news.", "type": "http" },
+          "http": { "method": "GET", "url": "https://data.alpaca.markets/v1beta1/news?symbols=AAPL&limit=10" },
+          "docs": "Returns market news articles, optionally filtered by symbols."
+        },
+        {
+          "info": { "name": "Get most active stocks.", "type": "http" },
+          "http": { "method": "GET", "url": "https://data.alpaca.markets/v1beta1/screener/stocks/most-actives?by=volume&top=10" },
+          "docs": "Returns the most active stocks by volume or trade count."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Broker API", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a brokerage account.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://broker-api.alpaca.markets/v1/accounts",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Opens a new end-user brokerage account. Broker API uses HTTP Basic auth (key as username, secret as password)."
+        },
+        {
+          "info": { "name": "Get a brokerage account.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://broker-api.alpaca.markets/v1/accounts/:account_id",
+            "params": [ { "name": "account_id", "value": "", "type": "path", "description": "The brokerage account UUID." } ]
+          },
+          "docs": "Retrieves a single end-user brokerage account."
+        },
+        {
+          "info": { "name": "Create an order for an account.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://broker-api.alpaca.markets/v1/trading/accounts/:account_id/orders",
+            "params": [ { "name": "account_id", "value": "", "type": "path", "description": "The brokerage account UUID." } ],
+            "body": { "type": "json", "data": "{\n  \"symbol\": \"AAPL\",\n  \"qty\": \"1\",\n  \"side\": \"buy\",\n  \"type\": \"market\",\n  \"time_in_force\": \"day\"\n}" }
+          },
+          "docs": "Places an order on behalf of an end-user account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

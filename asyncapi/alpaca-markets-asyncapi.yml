@@ -1,0 +1,588 @@
+asyncapi: '2.6.0'
+id: 'urn:markets:alpaca:market-data:websocket'
+info:
+  title: Alpaca Market Data Streaming (WebSocket)
+  version: '1.0.0'
+  description: |
+    AsyncAPI 2.6 description of Alpaca's **real-time market data WebSocket API**.
+
+    Unlike many providers, Alpaca publishes a genuine, documented public
+    WebSocket (`wss://`) surface for streaming market data. Clients open a
+    WebSocket connection to a feed-specific endpoint, send an `auth` control
+    message, then send `subscribe` messages to select channels per symbol (or
+    with a `*` wildcard). The server pushes a continuous stream of market data
+    messages until the client unsubscribes or disconnects.
+
+    Endpoints (documented at
+    https://docs.alpaca.markets/docs/streaming-market-data and
+    https://docs.alpaca.markets/docs/real-time-crypto-pricing-data):
+
+    - Stocks: `wss://stream.data.alpaca.markets/v2/{feed}` where `{feed}` is one
+      of `iex`, `sip`, `delayed_sip`, or `test`. The `test` feed streams fake
+      symbols (for example `FAKEPACA`) 24/7 for development. On the free Basic
+      plan the real-time stock feed is `iex`; the full-market `sip` feed
+      requires Algo Trader Plus.
+    - Crypto: `wss://stream.data.alpaca.markets/v1beta3/crypto/us`. The
+      v1beta3 crypto feed distributes data from Alpaca and Kraken and adds an
+      `orderbooks` channel (Level 2 book snapshots and updates).
+    - Options: `wss://stream.data.alpaca.markets/v1beta1/{feed}`
+      (`indicative` or `opra`).
+    - Sandbox mirror: `wss://stream.data.sandbox.alpaca.markets/...`.
+
+    Messages are exchanged as JSON arrays of message objects (msgpack is also
+    supported). Each message object carries a `T` field identifying its type:
+    control messages (`success`, `error`, `subscription`) and data messages
+    (`t` trade, `q` quote, `b` minute bar, `d` daily bar, `u` updated bar,
+    `s` trading status, `l` LULD, `c` correction, `x` cancel error, and
+    `o` crypto orderbook).
+
+    A separate Trading API account/order WebSocket exists at
+    `wss://{paper-}api.alpaca.markets/stream` (listen then receive
+    `trade_updates`); it is noted in the review but not modeled in this
+    document, which focuses on the market-data stream.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://apievangelist.com
+  license:
+    name: API documentation - Alpaca Terms of Service
+    url: https://alpaca.markets/terms
+  x-transport-notes:
+    transport: WebSocket
+    protocol: wss
+    direction: bidirectional (client sends control messages, server pushes data)
+    mediaType: application/json (msgpack also supported)
+    stocksEndpoint: 'wss://stream.data.alpaca.markets/v2/{feed}'
+    cryptoEndpoint: 'wss://stream.data.alpaca.markets/v1beta3/crypto/us'
+    optionsEndpoint: 'wss://stream.data.alpaca.markets/v1beta1/{feed}'
+    sandboxEndpoint: 'wss://stream.data.sandbox.alpaca.markets'
+    source: https://docs.alpaca.markets/docs/streaming-market-data
+defaultContentType: application/json
+servers:
+  stocks:
+    url: stream.data.alpaca.markets/v2/{feed}
+    protocol: wss
+    description: |
+      Real-time US equities WebSocket. `{feed}` selects the data source:
+      `iex` (free Basic), `sip` (full market, Algo Trader Plus),
+      `delayed_sip` (15-minute delayed SIP), or `test` (fake symbols, 24/7).
+    variables:
+      feed:
+        enum:
+          - iex
+          - sip
+          - delayed_sip
+          - test
+        default: iex
+        description: The stock data feed.
+    security:
+      - apiKeyAuth: []
+  crypto:
+    url: stream.data.alpaca.markets/v1beta3/crypto/us
+    protocol: wss
+    description: |
+      Real-time crypto WebSocket (v1beta3), distributing Alpaca and Kraken
+      data. Adds the `orderbooks` channel for Level 2 market depth.
+    security:
+      - apiKeyAuth: []
+channels:
+  /v2/{feed}:
+    description: |
+      Stock market data stream. After connecting, the server sends a
+      `[{"T":"success","msg":"connected"}]` control message. The client then
+      sends an `auth` message, receives
+      `[{"T":"success","msg":"authenticated"}]`, and sends `subscribe`
+      messages. The server thereafter pushes arrays of data messages (trades,
+      quotes, bars, etc.) for the subscribed symbols.
+    parameters:
+      feed:
+        description: The stock data feed (iex, sip, delayed_sip, test).
+        schema:
+          type: string
+    publish:
+      operationId: sendStockControlMessage
+      summary: Send a control message (auth, subscribe, unsubscribe).
+      description: |
+        Client-to-server control frames. The first frame after connecting must
+        be `auth`; subsequent frames add or remove channel subscriptions.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/AuthMessage'
+          - $ref: '#/components/messages/SubscribeMessage'
+          - $ref: '#/components/messages/UnsubscribeMessage'
+    subscribe:
+      operationId: receiveStockDataMessages
+      summary: Receive streamed market data and control acknowledgements.
+      description: |
+        Server-to-client frames. Each frame is a JSON array of one or more
+        message objects; each object's `T` field identifies its type.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/SuccessMessage'
+          - $ref: '#/components/messages/ErrorMessage'
+          - $ref: '#/components/messages/SubscriptionMessage'
+          - $ref: '#/components/messages/TradeMessage'
+          - $ref: '#/components/messages/QuoteMessage'
+          - $ref: '#/components/messages/BarMessage'
+          - $ref: '#/components/messages/TradingStatusMessage'
+  /v1beta3/crypto/us:
+    description: |
+      Crypto market data stream. Same auth/subscribe handshake as the stock
+      stream, plus an `orderbooks` channel carrying Level 2 book snapshots
+      (first message per symbol) and incremental updates.
+    publish:
+      operationId: sendCryptoControlMessage
+      summary: Send a crypto control message (auth, subscribe, unsubscribe).
+      description: Client-to-server control frames for the crypto stream.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/AuthMessage'
+          - $ref: '#/components/messages/SubscribeMessage'
+          - $ref: '#/components/messages/UnsubscribeMessage'
+    subscribe:
+      operationId: receiveCryptoDataMessages
+      summary: Receive streamed crypto market data.
+      description: Server-to-client frames including trades, quotes, bars, and orderbooks.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/SuccessMessage'
+          - $ref: '#/components/messages/ErrorMessage'
+          - $ref: '#/components/messages/SubscriptionMessage'
+          - $ref: '#/components/messages/TradeMessage'
+          - $ref: '#/components/messages/QuoteMessage'
+          - $ref: '#/components/messages/BarMessage'
+          - $ref: '#/components/messages/OrderbookMessage'
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: userPassword
+      description: |
+        Alpaca API key ID and secret, supplied in the WebSocket `auth`
+        control message body as `{"action":"auth","key":"<KEY_ID>","secret":"<SECRET>"}`.
+        For OAuth-based apps, send `"key":"oauth"` and `"secret":"<ACCESS_TOKEN>"`.
+  messages:
+    AuthMessage:
+      name: AuthMessage
+      title: Authenticate
+      summary: First client message; authenticates the connection.
+      contentType: application/json
+      payload:
+        type: object
+        required:
+          - action
+          - key
+          - secret
+        properties:
+          action:
+            type: string
+            enum:
+              - auth
+          key:
+            type: string
+            description: API key ID (or the literal "oauth" for OAuth access tokens).
+          secret:
+            type: string
+            description: API secret key (or the OAuth access token).
+      examples:
+        - name: auth
+          payload:
+            action: auth
+            key: PK00000000000000000
+            secret: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    SubscribeMessage:
+      name: SubscribeMessage
+      title: Subscribe
+      summary: Subscribe to one or more channels per symbol or with a wildcard.
+      contentType: application/json
+      payload:
+        type: object
+        required:
+          - action
+        properties:
+          action:
+            type: string
+            enum:
+              - subscribe
+          trades:
+            type: array
+            items:
+              type: string
+            description: Symbols to receive trades for. Use ["*"] for all symbols.
+          quotes:
+            type: array
+            items:
+              type: string
+            description: Symbols to receive quotes for.
+          bars:
+            type: array
+            items:
+              type: string
+            description: Symbols to receive minute bars for.
+          dailyBars:
+            type: array
+            items:
+              type: string
+            description: Symbols to receive daily bars for.
+          updatedBars:
+            type: array
+            items:
+              type: string
+            description: Symbols to receive updated (late/corrected) bars for.
+          statuses:
+            type: array
+            items:
+              type: string
+            description: Symbols to receive trading status events for.
+          orderbooks:
+            type: array
+            items:
+              type: string
+            description: Crypto pairs to receive Level 2 orderbook data for (crypto stream only).
+      examples:
+        - name: subscribeStocks
+          summary: Subscribe to AAPL trades and quotes, all-symbol bars
+          payload:
+            action: subscribe
+            trades:
+              - AAPL
+            quotes:
+              - AAPL
+              - TSLA
+            bars:
+              - '*'
+        - name: subscribeCryptoOrderbook
+          summary: Subscribe to BTC/USD orderbook
+          payload:
+            action: subscribe
+            orderbooks:
+              - BTC/USD
+    UnsubscribeMessage:
+      name: UnsubscribeMessage
+      title: Unsubscribe
+      summary: Remove channel subscriptions.
+      contentType: application/json
+      payload:
+        type: object
+        required:
+          - action
+        properties:
+          action:
+            type: string
+            enum:
+              - unsubscribe
+          trades:
+            type: array
+            items:
+              type: string
+          quotes:
+            type: array
+            items:
+              type: string
+          bars:
+            type: array
+            items:
+              type: string
+    SuccessMessage:
+      name: SuccessMessage
+      title: Success control frame
+      summary: Server acknowledgement (connected / authenticated).
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - success
+          msg:
+            type: string
+            description: For example "connected" or "authenticated".
+      examples:
+        - name: authenticated
+          payload:
+            T: success
+            msg: authenticated
+    ErrorMessage:
+      name: ErrorMessage
+      title: Error control frame
+      summary: Server error (bad auth, invalid subscription, connection limit, etc.).
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - error
+          code:
+            type: integer
+            description: Alpaca stream error code (for example 402 not authenticated, 406 connection limit exceeded).
+          msg:
+            type: string
+            description: Human-readable error message.
+      examples:
+        - name: notAuthenticated
+          payload:
+            T: error
+            code: 402
+            msg: auth failed
+    SubscriptionMessage:
+      name: SubscriptionMessage
+      title: Subscription control frame
+      summary: Server echo of the current active subscriptions after a subscribe/unsubscribe.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - subscription
+          trades:
+            type: array
+            items:
+              type: string
+          quotes:
+            type: array
+            items:
+              type: string
+          bars:
+            type: array
+            items:
+              type: string
+      examples:
+        - name: current
+          payload:
+            T: subscription
+            trades:
+              - AAPL
+            quotes:
+              - AAPL
+              - TSLA
+            bars:
+              - '*'
+    TradeMessage:
+      name: TradeMessage
+      title: Trade (T=t)
+      summary: A single executed trade.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - t
+          S:
+            type: string
+            description: Symbol.
+          i:
+            type: integer
+            description: Trade ID.
+          p:
+            type: number
+            description: Trade price.
+          s:
+            type: integer
+            description: Trade size.
+          t:
+            type: string
+            format: date-time
+            description: RFC-3339 timestamp with nanoseconds.
+          x:
+            type: string
+            description: Exchange code.
+          c:
+            type: array
+            items:
+              type: string
+            description: Trade condition flags.
+          z:
+            type: string
+            description: Tape (A, B, or C) for stocks.
+      examples:
+        - name: trade
+          payload:
+            T: t
+            S: AAPL
+            i: 12345
+            p: 195.62
+            s: 100
+            t: '2026-07-11T14:30:00.123456789Z'
+            x: V
+            c:
+              - '@'
+            z: C
+    QuoteMessage:
+      name: QuoteMessage
+      title: Quote (T=q)
+      summary: A national best bid/offer (or crypto) quote.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - q
+          S:
+            type: string
+            description: Symbol.
+          bp:
+            type: number
+            description: Bid price.
+          bs:
+            type: integer
+            description: Bid size.
+          ap:
+            type: number
+            description: Ask price.
+          as:
+            type: integer
+            description: Ask size.
+          t:
+            type: string
+            format: date-time
+            description: RFC-3339 timestamp.
+      examples:
+        - name: quote
+          payload:
+            T: q
+            S: AAPL
+            bp: 195.6
+            bs: 3
+            ap: 195.63
+            as: 2
+            t: '2026-07-11T14:30:00.123456789Z'
+    BarMessage:
+      name: BarMessage
+      title: Bar (T=b/d/u)
+      summary: An OHLCV aggregate bar (minute, daily, or updated).
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - b
+              - d
+              - u
+            description: b minute bar, d daily bar, u updated bar.
+          S:
+            type: string
+            description: Symbol.
+          o:
+            type: number
+            description: Open price.
+          h:
+            type: number
+            description: High price.
+          l:
+            type: number
+            description: Low price.
+          c:
+            type: number
+            description: Close price.
+          v:
+            type: integer
+            description: Volume.
+          t:
+            type: string
+            format: date-time
+            description: Bar timestamp.
+      examples:
+        - name: minuteBar
+          payload:
+            T: b
+            S: AAPL
+            o: 195.5
+            h: 195.7
+            l: 195.4
+            c: 195.62
+            v: 12500
+            t: '2026-07-11T14:30:00Z'
+    TradingStatusMessage:
+      name: TradingStatusMessage
+      title: Trading status (T=s)
+      summary: A trading halt/resume or LULD status change for a symbol.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - s
+          S:
+            type: string
+            description: Symbol.
+          sc:
+            type: string
+            description: Status code.
+          sm:
+            type: string
+            description: Status message.
+          t:
+            type: string
+            format: date-time
+            description: Timestamp.
+    OrderbookMessage:
+      name: OrderbookMessage
+      title: Crypto orderbook (T=o)
+      summary: A Level 2 orderbook snapshot or update (crypto stream only).
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          T:
+            type: string
+            enum:
+              - o
+          S:
+            type: string
+            description: Crypto pair, for example BTC/USD.
+          t:
+            type: string
+            format: date-time
+            description: Timestamp.
+          b:
+            type: array
+            description: Bid levels. First message per symbol is a full snapshot; subsequent messages are updates.
+            items:
+              type: object
+              properties:
+                p:
+                  type: number
+                  description: Price level.
+                s:
+                  type: number
+                  description: Size at the level (0 removes the level).
+          a:
+            type: array
+            description: Ask levels.
+            items:
+              type: object
+              properties:
+                p:
+                  type: number
+                  description: Price level.
+                s:
+                  type: number
+                  description: Size at the level (0 removes the level).
+          r:
+            type: boolean
+            description: Reset flag - true when this message is a full snapshot.
+      examples:
+        - name: orderbookSnapshot
+          payload:
+            T: o
+            S: BTC/USD
+            t: '2026-07-11T14:30:00.123456789Z'
+            b:
+              - p: 61000.5
+                s: 0.25
+            a:
+              - p: 61002.0
+                s: 0.4
+            r: true

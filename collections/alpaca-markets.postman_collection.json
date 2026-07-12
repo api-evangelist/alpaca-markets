@@ -1,0 +1,250 @@
+{
+  "info": {
+    "name": "Alpaca API",
+    "description": "Alpaca's commission-free trading and market data APIs. Trading API base https://api.alpaca.markets/v2 (paper: https://paper-api.alpaca.markets/v2); Market Data API base https://data.alpaca.markets; Broker API base https://broker-api.alpaca.markets/v1. Trading and Market Data authenticate with APCA-API-KEY-ID and APCA-API-SECRET-KEY headers; Broker API uses HTTP Basic auth.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "APCA-API-KEY-ID", "type": "string" },
+      { "key": "value", "value": "{{apcaKeyId}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "tradingBaseUrl", "value": "https://api.alpaca.markets/v2", "type": "string" },
+    { "key": "dataBaseUrl", "value": "https://data.alpaca.markets", "type": "string" },
+    { "key": "brokerBaseUrl", "value": "https://broker-api.alpaca.markets/v1", "type": "string" },
+    { "key": "apcaKeyId", "value": "", "type": "string" },
+    { "key": "apcaSecretKey", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Trading - Account",
+      "item": [
+        {
+          "name": "Get account",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/account", "host": ["{{tradingBaseUrl}}"], "path": ["account"] },
+            "description": "Returns the authenticated trading account's balances and status."
+          }
+        },
+        {
+          "name": "Get portfolio history",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/account/portfolio/history?period=1M&timeframe=1D", "host": ["{{tradingBaseUrl}}"], "path": ["account", "portfolio", "history"], "query": [{ "key": "period", "value": "1M" }, { "key": "timeframe", "value": "1D" }] },
+            "description": "Returns equity and profit/loss time series over a period."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trading - Orders",
+      "item": [
+        {
+          "name": "List orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/orders?status=open&limit=50", "host": ["{{tradingBaseUrl}}"], "path": ["orders"], "query": [{ "key": "status", "value": "open" }, { "key": "limit", "value": "50" }] },
+            "description": "Lists orders filterable by status, symbols, and time."
+          }
+        },
+        {
+          "name": "Create an order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"symbol\": \"AAPL\",\n  \"qty\": \"1\",\n  \"side\": \"buy\",\n  \"type\": \"market\",\n  \"time_in_force\": \"day\"\n}" },
+            "url": { "raw": "{{tradingBaseUrl}}/orders", "host": ["{{tradingBaseUrl}}"], "path": ["orders"] },
+            "description": "Submits a new order for stocks, options, or crypto."
+          }
+        },
+        {
+          "name": "Get an order",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/orders/:order_id", "host": ["{{tradingBaseUrl}}"], "path": ["orders", ":order_id"], "variable": [{ "key": "order_id", "value": "" }] },
+            "description": "Retrieves a single order by ID."
+          }
+        },
+        {
+          "name": "Cancel an order",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/orders/:order_id", "host": ["{{tradingBaseUrl}}"], "path": ["orders", ":order_id"], "variable": [{ "key": "order_id", "value": "" }] },
+            "description": "Attempts to cancel a single open order by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trading - Positions",
+      "item": [
+        {
+          "name": "List open positions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/positions", "host": ["{{tradingBaseUrl}}"], "path": ["positions"] },
+            "description": "Retrieves all open positions in the account."
+          }
+        },
+        {
+          "name": "Close a position",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/positions/:symbol_or_asset_id", "host": ["{{tradingBaseUrl}}"], "path": ["positions", ":symbol_or_asset_id"], "variable": [{ "key": "symbol_or_asset_id", "value": "" }] },
+            "description": "Liquidates the open position for a symbol or asset."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trading - Assets & Market",
+      "item": [
+        {
+          "name": "List assets",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/assets?status=active&asset_class=us_equity", "host": ["{{tradingBaseUrl}}"], "path": ["assets"], "query": [{ "key": "status", "value": "active" }, { "key": "asset_class", "value": "us_equity" }] },
+            "description": "Retrieves the catalog of tradable and non-tradable assets."
+          }
+        },
+        {
+          "name": "Get market clock",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{tradingBaseUrl}}/clock", "host": ["{{tradingBaseUrl}}"], "path": ["clock"] },
+            "description": "Returns whether the market is open and next open/close times."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Market Data - Stocks",
+      "item": [
+        {
+          "name": "Get historical stock bars",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v2/stocks/bars?symbols=AAPL,TSLA&timeframe=1Day&feed=iex", "host": ["{{dataBaseUrl}}"], "path": ["v2", "stocks", "bars"], "query": [{ "key": "symbols", "value": "AAPL,TSLA" }, { "key": "timeframe", "value": "1Day" }, { "key": "feed", "value": "iex" }] },
+            "description": "Returns OHLCV bars for one or more stock symbols. Use feed=sip on Algo Trader Plus."
+          }
+        },
+        {
+          "name": "Get stock snapshot",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v2/stocks/:symbol/snapshot", "host": ["{{dataBaseUrl}}"], "path": ["v2", "stocks", ":symbol", "snapshot"], "variable": [{ "key": "symbol", "value": "AAPL" }] },
+            "description": "Returns latest trade, quote, minute bar, daily bar, and previous daily bar."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Market Data - Crypto",
+      "item": [
+        {
+          "name": "Get historical crypto bars",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v1beta3/crypto/:loc/bars?symbols=BTC/USD,ETH/USD&timeframe=1Hour", "host": ["{{dataBaseUrl}}"], "path": ["v1beta3", "crypto", ":loc", "bars"], "variable": [{ "key": "loc", "value": "us" }], "query": [{ "key": "symbols", "value": "BTC/USD,ETH/USD" }, { "key": "timeframe", "value": "1Hour" }] },
+            "description": "Returns OHLCV bars for crypto pairs (v1beta3, Alpaca + Kraken)."
+          }
+        },
+        {
+          "name": "Get latest crypto orderbooks",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v1beta3/crypto/:loc/latest/orderbooks?symbols=BTC/USD", "host": ["{{dataBaseUrl}}"], "path": ["v1beta3", "crypto", ":loc", "latest", "orderbooks"], "variable": [{ "key": "loc", "value": "us" }], "query": [{ "key": "symbols", "value": "BTC/USD" }] },
+            "description": "Returns the latest Level 2 orderbook for one or more crypto pairs."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Market Data - Options, News, Screener",
+      "item": [
+        {
+          "name": "Get option chain snapshots",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v1beta1/options/snapshots/:underlying_symbol?feed=indicative", "host": ["{{dataBaseUrl}}"], "path": ["v1beta1", "options", "snapshots", ":underlying_symbol"], "variable": [{ "key": "underlying_symbol", "value": "AAPL" }], "query": [{ "key": "feed", "value": "indicative" }] },
+            "description": "Returns snapshots for the option contracts of an underlying symbol. Use feed=opra on Algo Trader Plus."
+          }
+        },
+        {
+          "name": "Get market news",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v1beta1/news?symbols=AAPL&limit=10", "host": ["{{dataBaseUrl}}"], "path": ["v1beta1", "news"], "query": [{ "key": "symbols", "value": "AAPL" }, { "key": "limit", "value": "10" }] },
+            "description": "Returns market news articles, optionally filtered by symbols."
+          }
+        },
+        {
+          "name": "Get most active stocks",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "APCA-API-SECRET-KEY", "value": "{{apcaSecretKey}}" }],
+            "url": { "raw": "{{dataBaseUrl}}/v1beta1/screener/stocks/most-actives?by=volume&top=10", "host": ["{{dataBaseUrl}}"], "path": ["v1beta1", "screener", "stocks", "most-actives"], "query": [{ "key": "by", "value": "volume" }, { "key": "top", "value": "10" }] },
+            "description": "Returns the most active stocks by volume or trade count."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Broker API",
+      "item": [
+        {
+          "name": "Create a brokerage account",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{apcaKeyId}}" }, { "key": "password", "value": "{{apcaSecretKey}}" }] },
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{brokerBaseUrl}}/accounts", "host": ["{{brokerBaseUrl}}"], "path": ["accounts"] },
+            "description": "Opens a new end-user brokerage account. Broker API uses HTTP Basic auth."
+          }
+        },
+        {
+          "name": "Get a brokerage account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{apcaKeyId}}" }, { "key": "password", "value": "{{apcaSecretKey}}" }] },
+            "url": { "raw": "{{brokerBaseUrl}}/accounts/:account_id", "host": ["{{brokerBaseUrl}}"], "path": ["accounts", ":account_id"], "variable": [{ "key": "account_id", "value": "" }] },
+            "description": "Retrieves a single end-user brokerage account."
+          }
+        },
+        {
+          "name": "Create an order for an account",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": { "type": "basic", "basic": [{ "key": "username", "value": "{{apcaKeyId}}" }, { "key": "password", "value": "{{apcaSecretKey}}" }] },
+            "body": { "mode": "raw", "raw": "{\n  \"symbol\": \"AAPL\",\n  \"qty\": \"1\",\n  \"side\": \"buy\",\n  \"type\": \"market\",\n  \"time_in_force\": \"day\"\n}" },
+            "url": { "raw": "{{brokerBaseUrl}}/trading/accounts/:account_id/orders", "host": ["{{brokerBaseUrl}}"], "path": ["trading", "accounts", ":account_id", "orders"], "variable": [{ "key": "account_id", "value": "" }] },
+            "description": "Places an order on behalf of an end-user account."
+          }
+        }
+      ]
+    }
+  ]
+}
