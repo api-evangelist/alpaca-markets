@@ -129,6 +129,8 @@ apis:
     of customers, and access documents and events. Sandbox at
     broker-api.sandbox.alpaca.markets uses HTTP Basic auth.
 common:
+- type: AgenticAccess
+  url: agentic-access/alpaca-markets-agentic-access.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/alpacahq
 - type: Website
