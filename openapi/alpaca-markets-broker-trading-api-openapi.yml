@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: Alpaca API (Trading, Market Data, Broker) Account Broker - Trading API
+  description: A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.
+  version: '1.0'
+  contact:
+    name: Alpaca
+    url: https://alpaca.markets
+  license:
+    name: API documentation - Alpaca Terms of Service
+    url: https://alpaca.markets/terms
+servers:
+- url: https://api.alpaca.markets/v2
+  description: Trading API - live
+- url: https://paper-api.alpaca.markets/v2
+  description: Trading API - paper (free sandbox)
+- url: https://data.alpaca.markets
+  description: Market Data API
+- url: https://broker-api.alpaca.markets/v1
+  description: Broker API - production
+security:
+- apcaKey: []
+  apcaSecret: []
+tags:
+- name: Broker - Trading
+  description: Place orders on behalf of end-user accounts.
+paths:
+  /trading/accounts/{account_id}/orders:
+    servers:
+    - url: https://broker-api.alpaca.markets/v1
+      description: Broker API
+    post:
+      operationId: createBrokerOrder
+      tags:
+      - Broker - Trading
+      summary: Create an order for an account
+      description: Places an order on behalf of an end-user account. Full path is https://broker-api.alpaca.markets/v1/trading/accounts/{account_id}/orders.
+      security:
+      - brokerBasic: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The brokerage account UUID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '200':
+          description: The created order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+components:
+  schemas:
+    OrderRequest:
+      type: object
+      required:
+      - symbol
+      - side
+      - type
+      - time_in_force
+      properties:
+        symbol:
+          type: string
+          description: Symbol or asset ID to trade, for example AAPL or BTC/USD.
+        qty:
+          type: string
+          description: Number of shares/units. Mutually exclusive with notional.
+        notional:
+          type: string
+          description: Dollar amount to trade (fractional). Mutually exclusive with qty.
+        side:
+          type: string
+          enum:
+          - buy
+          - sell
+          description: Order side.
+        type:
+          type: string
+          enum:
+          - market
+          - limit
+          - stop
+          - stop_limit
+          - trailing_stop
+          description: Order type.
+        time_in_force:
+          type: string
+          enum:
+          - day
+          - gtc
+          - opg
+          - cls
+          - ioc
+          - fok
+          description: Time in force.
+        limit_price:
+          type: string
+          description: Limit price, required for limit and stop_limit orders.
+        stop_price:
+          type: string
+          description: Stop price, required for stop and stop_limit orders.
+    Order:
+      type: object
+      description: An order.
+      properties:
+        id:
+          type: string
+          description: Order UUID.
+        client_order_id:
+          type: string
+          description: Client-supplied order identifier.
+        symbol:
+          type: string
+          description: The order's symbol.
+        qty:
+          type: string
+          description: Ordered quantity.
+        filled_qty:
+          type: string
+          description: Filled quantity.
+        side:
+          type: string
+          description: Order side.
+        type:
+          type: string
+          description: Order type.
+        time_in_force:
+          type: string
+          description: Time in force.
+        status:
+          type: string
+          description: Order status, for example new, filled, canceled.
+        submitted_at:
+          type: string
+          format: date-time
+          description: Submission timestamp.
+  securitySchemes:
+    apcaKey:
+      type: apiKey
+      in: header
+      name: APCA-API-KEY-ID
+      description: Alpaca API key ID. Paired with APCA-API-SECRET-KEY.
+    apcaSecret:
+      type: apiKey
+      in: header
+      name: APCA-API-SECRET-KEY
+      description: Alpaca API secret key. Paired with APCA-API-KEY-ID.
+    brokerBasic:
+      type: http
+      scheme: basic
+      description: Broker API HTTP Basic auth using your Broker API key as username and secret as password.

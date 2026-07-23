@@ -1,0 +1,124 @@
+openapi: 3.0.3
+info:
+  title: Alpaca API (Trading, Market Data, Broker) Account Positions API
+  description: A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.
+  version: '1.0'
+  contact:
+    name: Alpaca
+    url: https://alpaca.markets
+  license:
+    name: API documentation - Alpaca Terms of Service
+    url: https://alpaca.markets/terms
+servers:
+- url: https://api.alpaca.markets/v2
+  description: Trading API - live
+- url: https://paper-api.alpaca.markets/v2
+  description: Trading API - paper (free sandbox)
+- url: https://data.alpaca.markets
+  description: Market Data API
+- url: https://broker-api.alpaca.markets/v1
+  description: Broker API - production
+security:
+- apcaKey: []
+  apcaSecret: []
+tags:
+- name: Positions
+  description: Open positions and liquidation.
+paths:
+  /positions:
+    get:
+      operationId: listPositions
+      tags:
+      - Positions
+      summary: List open positions
+      description: Retrieves all open positions in the account.
+      responses:
+        '200':
+          description: A list of open positions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Position'
+    delete:
+      operationId: closeAllPositions
+      tags:
+      - Positions
+      summary: Close all positions
+      description: Liquidates all open positions.
+      responses:
+        '207':
+          description: Multi-status list of liquidation results.
+  /positions/{symbol_or_asset_id}:
+    parameters:
+    - name: symbol_or_asset_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Symbol or asset UUID.
+    get:
+      operationId: getPosition
+      tags:
+      - Positions
+      summary: Get an open position
+      description: Retrieves the open position for a given symbol or asset.
+      responses:
+        '200':
+          description: The open position.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+    delete:
+      operationId: closePosition
+      tags:
+      - Positions
+      summary: Close a position
+      description: Liquidates the open position for a symbol or asset.
+      responses:
+        '200':
+          description: The order created to close the position.
+components:
+  schemas:
+    Position:
+      type: object
+      description: An open position.
+      properties:
+        asset_id:
+          type: string
+          description: Asset UUID.
+        symbol:
+          type: string
+          description: The position's symbol.
+        qty:
+          type: string
+          description: Quantity held.
+        side:
+          type: string
+          description: long or short.
+        market_value:
+          type: string
+          description: Current market value of the position.
+        avg_entry_price:
+          type: string
+          description: Average entry price.
+        unrealized_pl:
+          type: string
+          description: Unrealized profit/loss.
+  securitySchemes:
+    apcaKey:
+      type: apiKey
+      in: header
+      name: APCA-API-KEY-ID
+      description: Alpaca API key ID. Paired with APCA-API-SECRET-KEY.
+    apcaSecret:
+      type: apiKey
+      in: header
+      name: APCA-API-SECRET-KEY
+      description: Alpaca API secret key. Paired with APCA-API-KEY-ID.
+    brokerBasic:
+      type: http
+      scheme: basic
+      description: Broker API HTTP Basic auth using your Broker API key as username and secret as password.

@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  title: Alpaca API (Trading, Market Data, Broker) Account Assets API
+  description: A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.
+  version: '1.0'
+  contact:
+    name: Alpaca
+    url: https://alpaca.markets
+  license:
+    name: API documentation - Alpaca Terms of Service
+    url: https://alpaca.markets/terms
+servers:
+- url: https://api.alpaca.markets/v2
+  description: Trading API - live
+- url: https://paper-api.alpaca.markets/v2
+  description: Trading API - paper (free sandbox)
+- url: https://data.alpaca.markets
+  description: Market Data API
+- url: https://broker-api.alpaca.markets/v1
+  description: Broker API - production
+security:
+- apcaKey: []
+  apcaSecret: []
+tags:
+- name: Assets
+  description: Tradable asset catalog.
+paths:
+  /assets:
+    get:
+      operationId: listAssets
+      tags:
+      - Assets
+      summary: List assets
+      description: Retrieves the catalog of tradable and non-tradable assets.
+      parameters:
+      - name: status
+        in: query
+        schema:
+          type: string
+        description: Filter by asset status, for example active.
+      - name: asset_class
+        in: query
+        schema:
+          type: string
+          enum:
+          - us_equity
+          - us_option
+          - crypto
+        description: Filter by asset class.
+      responses:
+        '200':
+          description: A list of assets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Asset'
+  /assets/{symbol_or_asset_id}:
+    get:
+      operationId: getAsset
+      tags:
+      - Assets
+      summary: Get an asset
+      description: Retrieves a single asset by symbol or asset ID.
+      parameters:
+      - name: symbol_or_asset_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Symbol or asset UUID.
+      responses:
+        '200':
+          description: The asset.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+components:
+  schemas:
+    Asset:
+      type: object
+      description: A tradable asset.
+      properties:
+        id:
+          type: string
+          description: Asset UUID.
+        class:
+          type: string
+          description: Asset class, for example us_equity, us_option, crypto.
+        symbol:
+          type: string
+          description: The asset's symbol.
+        name:
+          type: string
+          description: The asset's name.
+        exchange:
+          type: string
+          description: The listing exchange.
+        tradable:
+          type: boolean
+          description: Whether the asset is tradable on Alpaca.
+        fractionable:
+          type: boolean
+          description: Whether fractional orders are supported.
+  securitySchemes:
+    apcaKey:
+      type: apiKey
+      in: header
+      name: APCA-API-KEY-ID
+      description: Alpaca API key ID. Paired with APCA-API-SECRET-KEY.
+    apcaSecret:
+      type: apiKey
+      in: header
+      name: APCA-API-SECRET-KEY
+      description: Alpaca API secret key. Paired with APCA-API-KEY-ID.
+    brokerBasic:
+      type: http
+      scheme: basic
+      description: Broker API HTTP Basic auth using your Broker API key as username and secret as password.

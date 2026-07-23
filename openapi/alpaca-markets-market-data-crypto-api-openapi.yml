@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Alpaca API (Trading, Market Data, Broker) Account Market Data - Crypto API
+  description: A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.
+  version: '1.0'
+  contact:
+    name: Alpaca
+    url: https://alpaca.markets
+  license:
+    name: API documentation - Alpaca Terms of Service
+    url: https://alpaca.markets/terms
+servers:
+- url: https://api.alpaca.markets/v2
+  description: Trading API - live
+- url: https://paper-api.alpaca.markets/v2
+  description: Trading API - paper (free sandbox)
+- url: https://data.alpaca.markets
+  description: Market Data API
+- url: https://broker-api.alpaca.markets/v1
+  description: Broker API - production
+security:
+- apcaKey: []
+  apcaSecret: []
+tags:
+- name: Market Data - Crypto
+  description: Historical and latest crypto bars, trades, quotes, and orderbooks (v1beta3).
+paths:
+  /v1beta3/crypto/{loc}/bars:
+    servers:
+    - url: https://data.alpaca.markets
+      description: Market Data API
+    get:
+      operationId: getCryptoBars
+      tags:
+      - Market Data - Crypto
+      summary: Get historical crypto bars
+      description: Returns aggregate OHLCV bars for crypto pairs. Full path is https://data.alpaca.markets/v1beta3/crypto/{loc}/bars, where loc is the market location, for example us.
+      parameters:
+      - name: loc
+        in: path
+        required: true
+        schema:
+          type: string
+          default: us
+        description: Crypto market location, for example us.
+      - name: symbols
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Comma-separated crypto pairs, for example BTC/USD,ETH/USD.
+      - name: timeframe
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Bar aggregation, for example 1Min, 1Hour, 1Day.
+      responses:
+        '200':
+          description: Historical crypto bars keyed by symbol.
+          content:
+            application/json:
+              schema:
+                type: object
+  /v1beta3/crypto/{loc}/latest/orderbooks:
+    servers:
+    - url: https://data.alpaca.markets
+      description: Market Data API
+    get:
+      operationId: getCryptoLatestOrderbooks
+      tags:
+      - Market Data - Crypto
+      summary: Get latest crypto orderbooks
+      description: Returns the latest Level 2 orderbook for one or more crypto pairs. Full path is https://data.alpaca.markets/v1beta3/crypto/{loc}/latest/orderbooks.
+      parameters:
+      - name: loc
+        in: path
+        required: true
+        schema:
+          type: string
+          default: us
+        description: Crypto market location, for example us.
+      - name: symbols
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Comma-separated crypto pairs.
+      responses:
+        '200':
+          description: Latest orderbooks keyed by symbol.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    apcaKey:
+      type: apiKey
+      in: header
+      name: APCA-API-KEY-ID
+      description: Alpaca API key ID. Paired with APCA-API-SECRET-KEY.
+    apcaSecret:
+      type: apiKey
+      in: header
+      name: APCA-API-SECRET-KEY
+      description: Alpaca API secret key. Paired with APCA-API-KEY-ID.
+    brokerBasic:
+      type: http
+      scheme: basic
+      description: Broker API HTTP Basic auth using your Broker API key as username and secret as password.
