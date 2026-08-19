@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/account"
+          },
+          "docs": "Returns the authenticated trading account's details, balances, and status."
+        },
+        {
+          "info": {
+            "name": "Get account activities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/account/activities",
+            "params": [
+              {
+                "name": "activity_types",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated activity types to filter by (for example FILL, DIV)."
+              }
+            ]
+          },
+          "docs": "Returns account activity entries (fills, dividends, transfers, fees)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

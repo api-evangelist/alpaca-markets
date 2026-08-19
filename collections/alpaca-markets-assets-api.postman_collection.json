@@ -1,0 +1,245 @@
+{
+  "item": [
+    {
+      "id": "43a8e9c4-cf85-4f1d-ad94-1ef619ab6f06",
+      "name": "Assets",
+      "description": {
+        "content": "Tradable asset catalog.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "87f2e622-52cb-4f4f-a618-ea57da6bce44",
+          "name": "List assets",
+          "request": {
+            "name": "List assets",
+            "description": {
+              "content": "Retrieves the catalog of tradable and non-tradable assets.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "assets"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by asset status, for example active."
+                },
+                {
+                  "disabled": false,
+                  "key": "asset_class",
+                  "value": "<string>",
+                  "description": "Filter by asset class."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a9623a4d-4c54-4afb-8af4-c39c54e85540",
+              "name": "A list of assets.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "assets"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "asset_class",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "APCA-API-KEY-ID",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"class\": \"string\",\n    \"symbol\": \"string\",\n    \"name\": \"string\",\n    \"exchange\": \"string\",\n    \"tradable\": true,\n    \"fractionable\": true\n  },\n  {\n    \"id\": \"string\",\n    \"class\": \"string\",\n    \"symbol\": \"string\",\n    \"name\": \"string\",\n    \"exchange\": \"string\",\n    \"tradable\": false,\n    \"fractionable\": true\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bb9d6a17-2b7d-4404-b391-f5d6eab41c39",
+          "name": "Get an asset",
+          "request": {
+            "name": "Get an asset",
+            "description": {
+              "content": "Retrieves a single asset by symbol or asset ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "assets",
+                ":symbol_or_asset_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "symbol_or_asset_id",
+                  "description": "(Required) Symbol or asset UUID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2301efa0-8ef1-48a5-a89d-daa6cbd9666b",
+              "name": "The asset.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "assets",
+                    ":symbol_or_asset_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "symbol_or_asset_id",
+                      "description": "(Required) Symbol or asset UUID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "APCA-API-KEY-ID",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"class\": \"string\",\n  \"symbol\": \"string\",\n  \"name\": \"string\",\n  \"exchange\": \"string\",\n  \"tradable\": false,\n  \"fractionable\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.alpaca.markets/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "APCA-API-KEY-ID"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "16cd9a3d-d547-4881-8f34-52ef31bb0df5",
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Assets API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.\n\nContact Support:\n Name: Alpaca",
+      "type": "text/plain"
+    }
+  }
+}

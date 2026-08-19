@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Assets API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Assets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List assets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/assets",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by asset status, for example active."
+              },
+              {
+                "name": "asset_class",
+                "value": "",
+                "type": "query",
+                "description": "Filter by asset class."
+              }
+            ]
+          },
+          "docs": "Retrieves the catalog of tradable and non-tradable assets."
+        },
+        {
+          "info": {
+            "name": "Get an asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/assets/:symbol_or_asset_id",
+            "params": [
+              {
+                "name": "symbol_or_asset_id",
+                "value": "",
+                "type": "path",
+                "description": "Symbol or asset UUID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single asset by symbol or asset ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

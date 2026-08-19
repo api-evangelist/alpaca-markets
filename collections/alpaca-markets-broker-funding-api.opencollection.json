@@ -1,0 +1,54 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Broker - Funding API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Broker - Funding",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.alpaca.markets/v2/accounts/:account_id/transfers",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "The brokerage account UUID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Initiates an ACH or wire transfer to fund an end-user account. Full path is https://broker-api.alpaca.markets/v1/accounts/{account_id}/transfers."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Broker - Accounts API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Broker - Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a brokerage account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.alpaca.markets/v2/accounts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Opens a new end-user brokerage account with KYC/onboarding details. Full path is https://broker-api.alpaca.markets/v1/accounts. Broker API uses HTTP Basic authentication."
+        },
+        {
+          "info": {
+            "name": "Get a brokerage account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "The brokerage account UUID."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Retrieves a single end-user brokerage account. Full path is https://broker-api.alpaca.markets/v1/accounts/{account_id}."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

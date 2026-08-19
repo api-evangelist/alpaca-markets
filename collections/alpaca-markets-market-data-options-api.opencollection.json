@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - Options API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Market Data - Options",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get option chain snapshots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v1beta1/options/snapshots/:underlying_symbol",
+            "params": [
+              {
+                "name": "underlying_symbol",
+                "value": "",
+                "type": "path",
+                "description": "The underlying equity symbol, for example AAPL."
+              },
+              {
+                "name": "feed",
+                "value": "",
+                "type": "query",
+                "description": "Options feed. indicative on Basic, opra on Algo Trader Plus."
+              }
+            ]
+          },
+          "docs": "Returns snapshots for the option contracts of an underlying symbol. Full path is https://data.alpaca.markets/v1beta1/options/snapshots/{underlying_symbol}."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Portfolio API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Portfolio",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get portfolio history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/account/portfolio/history",
+            "params": [
+              {
+                "name": "period",
+                "value": "",
+                "type": "query",
+                "description": "The duration of the data, for example 1D, 1M, 1A."
+              },
+              {
+                "name": "timeframe",
+                "value": "",
+                "type": "query",
+                "description": "Resolution of time window, for example 1Min, 15Min, 1D."
+              }
+            ]
+          },
+          "docs": "Returns time series of account equity and profit/loss over a period."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

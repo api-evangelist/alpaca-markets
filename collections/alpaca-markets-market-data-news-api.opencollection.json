@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - News API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Market Data - News",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get market news",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v1beta1/news",
+            "params": [
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated symbols to filter news by."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of articles to return."
+              }
+            ]
+          },
+          "docs": "Returns market news articles, optionally filtered by symbols and time. Full path is https://data.alpaca.markets/v1beta1/news."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

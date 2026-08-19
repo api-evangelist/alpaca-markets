@@ -1,0 +1,156 @@
+{
+  "item": [
+    {
+      "id": "2b474a46-baec-4925-b4a5-ce199518a4a7",
+      "name": "Market Data - News",
+      "description": {
+        "content": "Real-time and historical market news (v1beta1).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9d304817-8941-4816-8c46-29b1a9fc13f7",
+          "name": "Get market news",
+          "request": {
+            "name": "Get market news",
+            "description": {
+              "content": "Returns market news articles, optionally filtered by symbols and time. Full path is https://data.alpaca.markets/v1beta1/news.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1beta1",
+                "news"
+              ],
+              "host": [
+                "{{v1beta1-news-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "symbols",
+                  "value": "<string>",
+                  "description": "Comma-separated symbols to filter news by."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Maximum number of articles to return."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ec5bf3b6-3146-4e39-81b6-0935f4ce2561",
+              "name": "News articles.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1beta1",
+                    "news"
+                  ],
+                  "host": [
+                    "{{v1beta1-news-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "symbols",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "APCA-API-KEY-ID",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.alpaca.markets/v2",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://data.alpaca.markets",
+      "key": "v1beta1-news-Url"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "APCA-API-KEY-ID"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "64a0ad56-dba1-4534-9c8f-55a1b59692dc",
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - News API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.\n\nContact Support:\n Name: Alpaca",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - Stocks API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Market Data - Stocks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get historical stock bars",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v2/stocks/bars",
+            "params": [
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of stock symbols."
+              },
+              {
+                "name": "timeframe",
+                "value": "",
+                "type": "query",
+                "description": "Bar aggregation, for example 1Min, 5Min, 1Hour, 1Day."
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "Inclusive RFC-3339 start time."
+              },
+              {
+                "name": "feed",
+                "value": "",
+                "type": "query",
+                "description": "Data feed. iex on Basic, sip on Algo Trader Plus."
+              }
+            ]
+          },
+          "docs": "Returns aggregate OHLCV bars for one or more stock symbols over a time range and timeframe. Full path is https://data.alpaca.markets/v2/stocks/bars."
+        },
+        {
+          "info": {
+            "name": "Get stock snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v2/stocks/:symbol/snapshot",
+            "params": [
+              {
+                "name": "symbol",
+                "value": "",
+                "type": "path",
+                "description": "The stock symbol."
+              }
+            ]
+          },
+          "docs": "Returns the latest trade, latest quote, minute bar, daily bar, and previous daily bar for a symbol. Full path is https://data.alpaca.markets/v2/stocks/{symbol}/snapshot."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

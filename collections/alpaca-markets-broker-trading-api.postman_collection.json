@@ -1,0 +1,187 @@
+{
+  "item": [
+    {
+      "id": "212e40ec-022b-4b70-ad62-06142d5bb3e8",
+      "name": "Broker - Trading",
+      "description": {
+        "content": "Place orders on behalf of end-user accounts.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "696f8f0e-3e9a-407b-bdde-bda76952c754",
+          "name": "Create an order for an account",
+          "request": {
+            "name": "Create an order for an account",
+            "description": {
+              "content": "Places an order on behalf of an end-user account. Full path is https://broker-api.alpaca.markets/v1/trading/accounts/{account_id}/orders.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "trading",
+                "accounts",
+                ":account_id",
+                "orders"
+              ],
+              "host": [
+                "{{trading-accounts-account_id-orders-Url}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "account_id",
+                  "description": "(Required) The brokerage account UUID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"<string>\",\n  \"side\": \"<string>\",\n  \"type\": \"<string>\",\n  \"time_in_force\": \"<string>\",\n  \"qty\": \"<string>\",\n  \"notional\": \"<string>\",\n  \"limit_price\": \"<string>\",\n  \"stop_price\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f8d0ed13-3bae-4cc6-8859-11d89fda91d7",
+              "name": "The created order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "trading",
+                    "accounts",
+                    ":account_id",
+                    "orders"
+                  ],
+                  "host": [
+                    "{{trading-accounts-account_id-orders-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "account_id",
+                      "description": "(Required) The brokerage account UUID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"symbol\": \"<string>\",\n  \"side\": \"<string>\",\n  \"type\": \"<string>\",\n  \"time_in_force\": \"<string>\",\n  \"qty\": \"<string>\",\n  \"notional\": \"<string>\",\n  \"limit_price\": \"<string>\",\n  \"stop_price\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"client_order_id\": \"string\",\n  \"symbol\": \"string\",\n  \"qty\": \"string\",\n  \"filled_qty\": \"string\",\n  \"side\": \"string\",\n  \"type\": \"string\",\n  \"time_in_force\": \"string\",\n  \"status\": \"string\",\n  \"submitted_at\": \"2019-12-04T11:59:26.335Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.alpaca.markets/v2",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://broker-api.alpaca.markets/v1",
+      "key": "trading-accounts-account_id-orders-Url"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "APCA-API-KEY-ID"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c70ee2b6-c3f3-44dc-a1e6-ed3b21860493",
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Broker - Trading API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.\n\nContact Support:\n Name: Alpaca",
+      "type": "text/plain"
+    }
+  }
+}

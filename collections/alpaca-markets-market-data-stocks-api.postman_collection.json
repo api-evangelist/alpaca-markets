@@ -1,0 +1,283 @@
+{
+  "item": [
+    {
+      "id": "aa682367-9d5b-4bfa-a92d-549fefd09d2d",
+      "name": "Market Data - Stocks",
+      "description": {
+        "content": "Historical and latest stock bars, trades, quotes, snapshots, and auctions.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "70313609-e410-4439-963b-5a210d3c2edb",
+          "name": "Get historical stock bars",
+          "request": {
+            "name": "Get historical stock bars",
+            "description": {
+              "content": "Returns aggregate OHLCV bars for one or more stock symbols over a time range and timeframe. Full path is https://data.alpaca.markets/v2/stocks/bars.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "stocks",
+                "bars"
+              ],
+              "host": [
+                "{{v2-stocks-bars-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "symbols",
+                  "value": "<string>",
+                  "description": "(Required) Comma-separated list of stock symbols."
+                },
+                {
+                  "disabled": false,
+                  "key": "timeframe",
+                  "value": "<string>",
+                  "description": "(Required) Bar aggregation, for example 1Min, 5Min, 1Hour, 1Day."
+                },
+                {
+                  "disabled": false,
+                  "key": "start",
+                  "value": "<dateTime>",
+                  "description": "Inclusive RFC-3339 start time."
+                },
+                {
+                  "disabled": false,
+                  "key": "feed",
+                  "value": "<string>",
+                  "description": "Data feed. iex on Basic, sip on Algo Trader Plus."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "13e029bc-79e0-47a0-bcd7-fc27774d9b65",
+              "name": "Historical bars keyed by symbol.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "stocks",
+                    "bars"
+                  ],
+                  "host": [
+                    "{{v2-stocks-bars-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "symbols",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "timeframe",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "start",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "feed",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "APCA-API-KEY-ID",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3dddd440-8320-4d18-a989-bcf194cdcd9d",
+          "name": "Get stock snapshot",
+          "request": {
+            "name": "Get stock snapshot",
+            "description": {
+              "content": "Returns the latest trade, latest quote, minute bar, daily bar, and previous daily bar for a symbol. Full path is https://data.alpaca.markets/v2/stocks/{symbol}/snapshot.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "stocks",
+                ":symbol",
+                "snapshot"
+              ],
+              "host": [
+                "{{v2-stocks-symbol-snapshot-Url}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "symbol",
+                  "description": "(Required) The stock symbol."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ad13a09e-a65d-45ce-958a-e370e8a69706",
+              "name": "The snapshot.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "stocks",
+                    ":symbol",
+                    "snapshot"
+                  ],
+                  "host": [
+                    "{{v2-stocks-symbol-snapshot-Url}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "symbol",
+                      "description": "(Required) The stock symbol."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "APCA-API-KEY-ID",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.alpaca.markets/v2",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://data.alpaca.markets",
+      "key": "v2-stocks-bars-Url"
+    },
+    {
+      "type": "string",
+      "value": "https://data.alpaca.markets",
+      "key": "v2-stocks-symbol-snapshot-Url"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "APCA-API-KEY-ID"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "91178212-74c9-422f-899b-25b36ad72991",
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - Stocks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.\n\nContact Support:\n Name: Alpaca",
+      "type": "text/plain"
+    }
+  }
+}

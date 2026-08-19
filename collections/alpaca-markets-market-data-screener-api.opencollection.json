@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - Screener API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Market Data - Screener",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get most active stocks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v1beta1/screener/stocks/most-actives",
+            "params": [
+              {
+                "name": "by",
+                "value": "",
+                "type": "query",
+                "description": "Ranking metric."
+              },
+              {
+                "name": "top",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return."
+              }
+            ]
+          },
+          "docs": "Returns the most active stocks by volume or trade count. Full path is https://data.alpaca.markets/v1beta1/screener/stocks/most-actives."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

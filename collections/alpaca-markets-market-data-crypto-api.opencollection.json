@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - Crypto API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "APCA-API-KEY-ID",
+      "value": "{{APCA-API-KEY-ID}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Market Data - Crypto",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get historical crypto bars",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v1beta3/crypto/:loc/bars",
+            "params": [
+              {
+                "name": "loc",
+                "value": "",
+                "type": "path",
+                "description": "Crypto market location, for example us."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated crypto pairs, for example BTC/USD,ETH/USD."
+              },
+              {
+                "name": "timeframe",
+                "value": "",
+                "type": "query",
+                "description": "Bar aggregation, for example 1Min, 1Hour, 1Day."
+              }
+            ]
+          },
+          "docs": "Returns aggregate OHLCV bars for crypto pairs. Full path is https://data.alpaca.markets/v1beta3/crypto/{loc}/bars, where loc is the market location, for example us."
+        },
+        {
+          "info": {
+            "name": "Get latest crypto orderbooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.alpaca.markets/v2/v1beta3/crypto/:loc/latest/orderbooks",
+            "params": [
+              {
+                "name": "loc",
+                "value": "",
+                "type": "path",
+                "description": "Crypto market location, for example us."
+              },
+              {
+                "name": "symbols",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated crypto pairs."
+              }
+            ]
+          },
+          "docs": "Returns the latest Level 2 orderbook for one or more crypto pairs. Full path is https://data.alpaca.markets/v1beta3/crypto/{loc}/latest/orderbooks."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

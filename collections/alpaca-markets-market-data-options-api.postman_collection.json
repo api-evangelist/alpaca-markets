@@ -1,0 +1,166 @@
+{
+  "item": [
+    {
+      "id": "b22ffbfa-27c5-4710-9a7d-d5ef2af8420a",
+      "name": "Market Data - Options",
+      "description": {
+        "content": "Options bars, trades, and snapshots (v1beta1).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "933f3e88-4f17-4107-aaba-2d2fb45ee6d8",
+          "name": "Get option chain snapshots",
+          "request": {
+            "name": "Get option chain snapshots",
+            "description": {
+              "content": "Returns snapshots for the option contracts of an underlying symbol. Full path is https://data.alpaca.markets/v1beta1/options/snapshots/{underlying_symbol}.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1beta1",
+                "options",
+                "snapshots",
+                ":underlying_symbol"
+              ],
+              "host": [
+                "{{v1beta1-options-snapshots-underlying_symbol-Url}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "feed",
+                  "value": "<string>",
+                  "description": "Options feed. indicative on Basic, opra on Algo Trader Plus."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "underlying_symbol",
+                  "description": "(Required) The underlying equity symbol, for example AAPL."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a882ac3b-1035-453a-a2dd-700dff8ba8cf",
+              "name": "Option snapshots.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1beta1",
+                    "options",
+                    "snapshots",
+                    ":underlying_symbol"
+                  ],
+                  "host": [
+                    "{{v1beta1-options-snapshots-underlying_symbol-Url}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "feed",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "underlying_symbol",
+                      "description": "(Required) The underlying equity symbol, for example AAPL."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "APCA-API-KEY-ID",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.alpaca.markets/v2",
+      "key": "baseUrl"
+    },
+    {
+      "type": "string",
+      "value": "https://data.alpaca.markets",
+      "key": "v1beta1-options-snapshots-underlying_symbol-Url"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "APCA-API-KEY-ID"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "368b45a5-ccd5-4ea2-94de-5c62ef99451b",
+    "name": "Alpaca API (Trading, Market Data, Broker) Account Market Data - Options API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.\n\nContact Support:\n Name: Alpaca",
+      "type": "text/plain"
+    }
+  }
+}
