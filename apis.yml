@@ -11,6 +11,18 @@ description: Alpaca is a developer-first, commission-free brokerage that exposes
   stream.data.alpaca.markets); and the Broker API lets businesses open and fund
   end-user brokerage accounts. Authentication uses APCA-API-KEY-ID and
   APCA-API-SECRET-KEY headers, with OAuth2 available for third-party apps.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: unknown
