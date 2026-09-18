@@ -1,21 +1,7 @@
 {
   "provider": "alpaca-markets",
   "sources": [
-    "alpaca-markets-account-api-openapi.yml",
-    "alpaca-markets-assets-api-openapi.yml",
-    "alpaca-markets-broker-accounts-api-openapi.yml",
-    "alpaca-markets-broker-funding-api-openapi.yml",
-    "alpaca-markets-broker-trading-api-openapi.yml",
-    "alpaca-markets-market-api-openapi.yml",
-    "alpaca-markets-market-data-crypto-api-openapi.yml",
-    "alpaca-markets-market-data-news-api-openapi.yml",
-    "alpaca-markets-market-data-options-api-openapi.yml",
-    "alpaca-markets-market-data-screener-api-openapi.yml",
-    "alpaca-markets-market-data-stocks-api-openapi.yml",
-    "alpaca-markets-orders-api-openapi.yml",
-    "alpaca-markets-portfolio-api-openapi.yml",
-    "alpaca-markets-positions-api-openapi.yml",
-    "alpaca-markets-watchlists-api-openapi.yml"
+    "_original/alpaca-markets-openapi.yml"
   ],
   "outputs": [
     "alpaca-markets-account-api-openapi.yml",
@@ -37,6 +23,26 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "alpaca-markets-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "alpaca-markets-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-assets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-broker-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-broker-funding-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-broker-trading-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-market-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-market-data-crypto-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-market-data-news-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-market-data-options-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-market-data-screener-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-market-data-stocks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-orders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-portfolio-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-positions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "alpaca-markets-watchlists-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

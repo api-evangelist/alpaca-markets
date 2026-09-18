@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Alpaca API (Trading, Market Data, Broker) Account Broker - Trading API
-  description: A grounded, curated OpenAPI description of Alpaca's public REST surface. Alpaca is a developer-first, commission-free brokerage whose stock, ETF, options, and crypto trading and market data are exposed entirely through APIs. This document covers the three REST products - the Trading API (api.alpaca.markets/v2, with a free paper sandbox at paper-api.alpaca.markets/v2), the Market Data API (data.alpaca.markets, with v2 stocks, v1beta3 crypto, and v1beta1 options/news/screener namespaces), and the Broker API (broker-api.alpaca.markets/v1). Real-time WebSocket streaming for market data is described in the companion AsyncAPI document at asyncapi/alpaca-markets-asyncapi.yml. Trading and Market Data authenticate with the APCA-API-KEY-ID and APCA-API-SECRET-KEY headers (or OAuth2 for third-party apps); the Broker API uses HTTP Basic auth. This spec is a representative subset of the full API for discovery purposes, not an exhaustive vendor specification.
+  title: Alpaca API (Trading, Market Data, Broker) Broker - Trading…
+  description: A grounded, curated OpenAPI description of Alpaca's public REST surface.
   version: '1.0'
   contact:
     name: Alpaca
@@ -59,6 +59,41 @@ paths:
                 $ref: '#/components/schemas/Order'
 components:
   schemas:
+    Order:
+      type: object
+      description: An order.
+      properties:
+        id:
+          type: string
+          description: Order UUID.
+        client_order_id:
+          type: string
+          description: Client-supplied order identifier.
+        symbol:
+          type: string
+          description: The order's symbol.
+        qty:
+          type: string
+          description: Ordered quantity.
+        filled_qty:
+          type: string
+          description: Filled quantity.
+        side:
+          type: string
+          description: Order side.
+        type:
+          type: string
+          description: Order type.
+        time_in_force:
+          type: string
+          description: Time in force.
+        status:
+          type: string
+          description: Order status, for example new, filled, canceled.
+        submitted_at:
+          type: string
+          format: date-time
+          description: Submission timestamp.
     OrderRequest:
       type: object
       required:
@@ -107,41 +142,6 @@ components:
         stop_price:
           type: string
           description: Stop price, required for stop and stop_limit orders.
-    Order:
-      type: object
-      description: An order.
-      properties:
-        id:
-          type: string
-          description: Order UUID.
-        client_order_id:
-          type: string
-          description: Client-supplied order identifier.
-        symbol:
-          type: string
-          description: The order's symbol.
-        qty:
-          type: string
-          description: Ordered quantity.
-        filled_qty:
-          type: string
-          description: Filled quantity.
-        side:
-          type: string
-          description: Order side.
-        type:
-          type: string
-          description: Order type.
-        time_in_force:
-          type: string
-          description: Time in force.
-        status:
-          type: string
-          description: Order status, for example new, filled, canceled.
-        submitted_at:
-          type: string
-          format: date-time
-          description: Submission timestamp.
   securitySchemes:
     apcaKey:
       type: apiKey
